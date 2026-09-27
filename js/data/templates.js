@@ -130,6 +130,32 @@ export const TEMPLATES = [
     ],
   },
 
+  /* ========================= CARDIO + CORE ========================= */
+  {
+    id: 'cardio_core',
+    name: 'Cardio + Core',
+    subtitle: 'Intervals, carries and abs · 40 min',
+    focus: ['cardio', 'abs', 'obliques'],
+    estMin: 40,
+    standalone: true,
+    why: 'A full day that is not a lifting day. Intervals push your conditioning harder than steady walking without beating up your joints, and the core work afterwards is the part most people skip. Good as a fifth day, or swap it in whenever a lifting day is not happening.',
+    blocks: [
+      b('tm_warmup',        { sets: 1, min: 5, incline: 3, speed: 3.0, rest: 0 }),
+      b('tm_intervals',     { sets: 1, min: 18, incline: 10, speed: 3.4, rest: 0,
+                              note: '1 minute steep climb, 2 minutes easy, six rounds. Log the average incline and speed — the app cannot see the up and down.' }),
+      b('tm_cooldown',      { sets: 1, min: 4, incline: 0, speed: 2.5, rest: 0 }),
+      b('side_plank',       { sets: 3, time: 35, perSide: true, rest: 45 }),
+      b('cable_pallof',     { sets: 3, reps: '12', perSide: true, rest: 45 }),
+      b('bicycle_crunch',   { sets: 3, reps: '20', rest: 45 }),
+      b('hollow_hold',      { sets: 3, time: 25, rest: 45 }),
+      b('suitcase_carry',   { sets: 3, time: 40, perSide: true, rest: 60,
+                              note: 'Heaviest dumbbell you can walk tall with.' }),
+      b('bird_dog',         { sets: 2, reps: '10', perSide: true, rest: 30 }),
+      b('child_pose',       { sets: 1, time: 45, rest: 0 }),
+      b('hipflexor_stretch',{ sets: 1, time: 40, perSide: true, rest: 0 }),
+    ],
+  },
+
   /* ======================= MOBILITY / RECOVERY ======================= */
   {
     id: 'mobility',

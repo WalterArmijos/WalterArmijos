@@ -82,7 +82,13 @@ Four sessions a week, roughly 50–55 minutes each including the treadmill:
 The numbers on the list are just the suggested running order — rename any workout to
 whatever you actually call it and the order stays.
 
-Plus **Incline Burn** (treadmill only) for off days and **Mobility & Stretch** for rest days.
+Plus three you can drop in whenever:
+
+- **Cardio + Core** — treadmill intervals, then carries, planks and anti-rotation work.
+  A full session that isn't a lifting day; works as a fifth day or as a swap when a
+  lifting day isn't happening.
+- **Incline Burn** — treadmill only, 35 minutes steady. The low-effort option.
+- **Mobility & Stretch** — 15 minutes, for rest days.
 
 Each day opens with a treadmill warm-up and closes with a 15–20 minute incline walk,
 then stretching. Calisthenics come first while you're fresh — the dumbbell work exists
