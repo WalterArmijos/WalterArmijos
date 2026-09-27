@@ -26,7 +26,7 @@ export function templatesView() {
       ),
     ),
     h('div', { class: 'section-title' }, 'Strength rotation'),
-    h('div', { class: 'stack' }, ...rotation.map(t => templateRow(t))),
+    h('div', { class: 'stack' }, ...rotation.map((t, i) => templateRow(t, false, i + 1))),
     h('div', { class: 'section-title' }, 'Anytime'),
     h('div', { class: 'stack' }, ...extras.map(t => templateRow(t, true))),
     h('div', { class: 'stack', style: { marginTop: '18px' } },
@@ -36,14 +36,44 @@ export function templatesView() {
         icon('play'), 'Start an empty workout'),
     ),
   );
+
+  const hidden = S.hiddenTemplates();
+  if (hidden.length) {
+    view.append(h('button', {
+      class: 'btn btn-ghost btn-block btn-sm', style: { marginTop: '10px' },
+      onClick: () => restoreSheet(hidden),
+    }, `Restore ${hidden.length} deleted workout${hidden.length === 1 ? '' : 's'}`));
+  }
   return view;
 }
 
-function templateRow(t, alt = false) {
+function restoreSheet(hidden) {
+  sheet(close => frag(
+    h('h2', {}, 'Deleted workouts'),
+    h('p', { class: 'muted small', style: { marginTop: '6px' } },
+      'Built-in workouts are only hidden, never erased. Bring one back below.'),
+    h('div', { style: { marginTop: '12px' } }, ...hidden.map(t =>
+      h('button', { class: 'list-btn', onClick: async () => {
+        await S.resetTemplate(t.id);
+        close();
+        toast(`${t.name} restored`);
+        go('/templates');
+      } },
+        h('span', { class: 'g' },
+          h('span', { class: 't' }, t.name),
+          h('span', { class: 's' }, t.subtitle)),
+        h('span', { style: { color: 'var(--accent)', display: 'flex' } }, icon('plus')),
+      ))),
+    h('div', { class: 'sheet-actions' },
+      h('button', { class: 'btn btn-lg btn-block btn-ghost', onClick: close }, 'Close')),
+  ));
+}
+
+function templateRow(t, alt = false, order = null) {
   const last = S.state.sessions.find(s => s.templateId === t.id);
   return h('button', { class: 'tpl', onClick: () => go(`/template/${t.id}`) },
     h('div', { class: `tpl-badge ${alt ? 'alt' : ''}` },
-      alt ? icon(t.id === 'mobility' ? 'stretch' : 'flame') : `D${t.day}`),
+      alt ? icon(t.id === 'mobility' ? 'stretch' : 'flame') : String(order ?? t.day ?? '')),
     h('div', { class: 'tpl-body' },
       h('div', { class: 't' }, t.name),
       h('div', { class: 's' },
@@ -118,19 +148,24 @@ export function templateDetailView(id) {
   view.append(list);
 
   view.append(h('div', { class: 'stack', style: { marginTop: '16px' } },
+    h('button', { class: 'btn btn-outline btn-block', onClick: () => renameTemplate(t) },
+      icon('edit'), 'Rename'),
     h('button', { class: 'btn btn-outline btn-block', onClick: () => go(`/template/${t.id}/edit`) },
-      icon('edit'), 'Edit this template'),
+      icon('edit'), 'Edit exercises'),
     h('button', { class: 'btn btn-ghost btn-block', onClick: () => duplicate(t) },
       icon('copy'), 'Duplicate'),
     edited && h('button', { class: 'btn btn-ghost btn-block', onClick: () => confirmSheet({
       title: 'Reset to the original?',
-      message: 'Your edits to this built-in template will be undone.',
+      message: 'Your edits to this built-in template will be undone, including the name.',
       confirmText: 'Reset', danger: true,
       onConfirm: async () => { await S.resetTemplate(t.id); toast('Reset'); go(`/template/${t.id}`); },
     }) }, 'Reset to original'),
-    !isBuiltIn && h('button', { class: 'btn btn-danger btn-block', onClick: () => confirmSheet({
-      title: `Delete "${t.name}"?`, message: 'Past workouts you logged from it are kept.',
-      confirmText: 'Delete template', danger: true,
+    h('button', { class: 'btn btn-danger btn-block', onClick: () => confirmSheet({
+      title: `Delete "${t.name}"?`,
+      message: isBuiltIn
+        ? 'It comes off your list. Workouts you already logged from it are kept, and you can restore it any time from the bottom of the Workouts tab.'
+        : 'Workouts you already logged from it are kept. This template cannot be brought back.',
+      confirmText: 'Delete workout', danger: true,
       onConfirm: async () => { await S.deleteTemplate(t.id); toast('Deleted'); go('/templates'); },
     }) }, icon('trash'), 'Delete'),
   ));
@@ -284,6 +319,20 @@ function editBlock(b, ex, paint) {
 }
 
 /* ------------------------------------------------------------------ */
+function renameTemplate(t) {
+  promptSheet({
+    title: 'Rename workout', label: 'Name', value: t.name,
+    hint: 'Call it whatever you actually call it.',
+    onSave: async (name) => {
+      const next = name.trim();
+      if (!next) return toast('Give it a name');
+      await S.saveTemplate({ ...structuredClone(t), name: next });
+      toast('Renamed');
+      go(`/template/${t.id}`);
+    },
+  });
+}
+
 function duplicate(t) {
   promptSheet({
     title: 'Duplicate template', label: 'New name', value: `${t.name} (copy)`,

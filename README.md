@@ -42,9 +42,19 @@ npx http-server -p 8080 .
 # then open http://localhost:8080
 ```
 
-To put it on your phone permanently, host it somewhere with HTTPS. The simplest free
-option is **GitHub Pages**: repo *Settings → Pages → Source: Deploy from a branch*,
-pick this branch and the root folder. The URL it gives you is the one you install from.
+To put it on your phone permanently, host it somewhere with HTTPS.
+
+**GitHub Pages** is the simplest free option, and a workflow for it is already in the
+repo at `.github/workflows/deploy.yml`. Switch it on once — repo *Settings → Pages →
+Source: **GitHub Actions*** — and every push redeploys the site automatically. The URL
+it gives you is the one you install from.
+
+One thing to know: this is your `WalterArmijos/WalterArmijos` profile repo, so Pages
+serves it at `https://walterarmijos.github.io/` — your user site, and publicly readable.
+The code being public is harmless (your workout data never leaves your phone), but if
+you'd rather it not sit at your profile URL, move these files to a repo of their own and
+the same workflow deploys it to a project URL instead. Any static host — Netlify, Vercel,
+Cloudflare Pages — works just as well with no changes.
 
 > It must be served over `http://` or `https://` — opening `index.html` straight off the
 > filesystem will not work, because browsers block JavaScript modules and the offline
@@ -62,12 +72,15 @@ restore from on any device, which is also how you'd move to a new phone.
 
 Four sessions a week, roughly 50–55 minutes each including the treadmill:
 
-| Day | Focus | Main lifts |
-|-----|-------|-----------|
-| 1 | Push — chest, shoulders, triceps, core | Push-ups, DB bench, DB shoulder press |
-| 2 | Legs — quads, hamstrings, glutes | Goblet squat, DB Romanian deadlift, lunges |
-| 3 | Pull — back, biceps, obliques | Lat pulldown, cable row, single-arm row |
-| 4 | Full-body calisthenics circuit | Push-ups, squats, rows, planks, mountain climbers |
+| Workout | Focus | Main lifts |
+|---------|-------|-----------|
+| **Push** | Chest, shoulders, triceps, core | Push-ups, DB bench, DB shoulder press |
+| **Legs** | Quads, hamstrings, glutes | Goblet squat, DB Romanian deadlift, lunges |
+| **Pull** | Back, biceps, obliques | Lat pulldown, cable row, single-arm row |
+| **Calisthenics Circuit** | Full body, core-heavy | Push-ups, squats, rows, planks, mountain climbers |
+
+The numbers on the list are just the suggested running order — rename any workout to
+whatever you actually call it and the order stays.
 
 Plus **Incline Burn** (treadmill only) for off days and **Mobility & Stretch** for rest days.
 
@@ -76,12 +89,19 @@ then stretching. Calisthenics come first while you're fresh — the dumbbell wor
 partly to make the bodyweight movements easier over time. Every template has a short
 "why" on its detail screen, and every exercise has form cues behind the *How to* button.
 
-Templates are fully editable, and you can build your own from scratch. Editing a
-built-in one can always be undone with *Reset to original*.
+Templates are fully editable, and you can build your own from scratch. Every workout
+can be renamed (*Rename*), have its exercises reworked (*Edit exercises*), be duplicated,
+or be deleted. Deleting a built-in only hides it — a *Restore deleted workouts* button
+appears at the bottom of the Workouts tab — and *Reset to original* undoes any edit,
+including a rename.
+
+Logged workouts can be renamed from their detail screen, and deleted either there or
+straight from the list: **History → Edit**, then the bin icon on any row.
 
 ## Layout
 
 ```
+.github/workflows/      one-click GitHub Pages deployment
 index.html              app shell
 manifest.webmanifest    PWA manifest
 sw.js                   service worker (offline cache)

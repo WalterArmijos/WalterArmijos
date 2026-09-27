@@ -139,9 +139,14 @@ function progressBar(start, cur, goal) {
   );
 }
 
-export function sessionRow(s) {
+/**
+ * One row in a workout list. Pass onDelete to show a delete action inline —
+ * the row is then a container rather than a button, since a button cannot
+ * legally contain another button.
+ */
+export function sessionRow(s, { onDelete = null } = {}) {
   const d = new Date(s.startedAt);
-  return h('button', { class: 'hist', onClick: () => go(`/workout/${s.id}`) },
+  const main = h('button', { class: 'hist-main', onClick: () => go(`/workout/${s.id}`) },
     h('div', { class: 'date' },
       h('div', { class: 'm' }, d.toLocaleDateString(undefined, { month: 'short' })),
       h('div', { class: 'd tnum' }, d.getDate()),
@@ -154,7 +159,15 @@ export function sessionRow(s) {
          fmtDuration(s.durationSec),
          s.calories > 0 && `${s.calories} kcal`].filter(Boolean).join(' · ')),
     ),
-    h('span', { class: 'chev' }, icon('chevron')),
+    !onDelete && h('span', { class: 'chev' }, icon('chevron')),
+  );
+
+  return h('div', { class: 'hist' }, main,
+    onDelete && h('button', {
+      class: 'icon-btn plain', style: { color: 'var(--crit)', flex: 'none' },
+      'aria-label': `Delete ${s.name} from ${fmtDay(s.startedAt)}`,
+      onClick: () => onDelete(s),
+    }, icon('trash')),
   );
 }
 

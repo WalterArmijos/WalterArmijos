@@ -82,6 +82,13 @@ export function allTemplates() {
 
 export const templateById = (id) => allTemplates().find(t => t.id === id) || null;
 
+/** Built-in templates the user has deleted — recoverable, never really gone. */
+export function hiddenTemplates() {
+  return state.customTemplates
+    .filter(t => t.deleted && TEMPLATES.some(b => b.id === t.id))
+    .map(t => TEMPLATES.find(b => b.id === t.id));
+}
+
 export async function saveTemplate(tpl) {
   tpl.updatedAt = Date.now();
   await db.put('templates', tpl);
@@ -214,6 +221,15 @@ export async function finishSession() {
   state.sessions.sort((a, b) => b.startedAt - a.startedAt);
   await discardActive();
   return done;
+}
+
+/** Rename a workout already in your history. */
+export async function renameSession(id, name) {
+  const s = state.sessions.find(x => x.id === id);
+  if (!s) return;
+  s.name = (name || '').trim() || s.name;
+  await db.put('sessions', s);
+  emit();
 }
 
 export async function deleteSession(id) {
@@ -431,13 +447,25 @@ export function weekStreak() {
   return streak;
 }
 
-/** Next template in the 4-day rotation, based on what you did last. */
+/**
+ * Next template in the rotation, based on what you did last.
+ * Walks past any rotation slot you have deleted, so the suggestion never
+ * points at a workout that is no longer in your list.
+ */
 export function nextUp() {
   const lastRotation = state.sessions.find(s => ROTATION.includes(s.templateId));
-  const idx = lastRotation ? (ROTATION.indexOf(lastRotation.templateId) + 1) % ROTATION.length : 0;
-  const tpl = templateById(ROTATION[idx]);
-  const lastSame = state.sessions.find(s => s.templateId === tpl?.id);
-  return { template: tpl, lastDone: lastSame?.startedAt ?? null };
+  const start = lastRotation ? ROTATION.indexOf(lastRotation.templateId) + 1 : 0;
+
+  for (let i = 0; i < ROTATION.length; i++) {
+    const tpl = templateById(ROTATION[(start + i) % ROTATION.length]);
+    if (tpl) {
+      const lastSame = state.sessions.find(s => s.templateId === tpl.id);
+      return { template: tpl, lastDone: lastSame?.startedAt ?? null };
+    }
+  }
+  // Whole rotation deleted — fall back to whatever templates remain.
+  const any = allTemplates()[0] ?? null;
+  return { template: any, lastDone: null };
 }
 
 export function daysSinceLast() {

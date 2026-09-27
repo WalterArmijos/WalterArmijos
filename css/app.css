@@ -482,10 +482,16 @@ select.input {
    History & charts
    ============================================================ */
 .hist {
-  display: flex; gap: 12px; width: 100%; text-align: left; padding: 13px;
+  display: flex; gap: 8px; width: 100%; padding: 13px;
   background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--r-lg);
   box-shadow: var(--shadow-1); align-items: center;
 }
+.hist-main {
+  display: flex; gap: 12px; align-items: center; flex: 1; min-width: 0;
+  text-align: left; background: none; border: none; padding: 0; color: inherit;
+  transition: transform .09s var(--ease);
+}
+.hist-main:active { transform: scale(.987); }
 .hist .date {
   width: 46px; flex: none; text-align: center; background: var(--surface-2);
   border-radius: var(--r-sm); padding: 5px 0;

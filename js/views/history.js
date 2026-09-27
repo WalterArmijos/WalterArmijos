@@ -1,5 +1,5 @@
 /** Workout history list + a single completed workout. */
-import { h, icon, frag, confirmSheet, toast, empty, fmtDuration, fmtVolume, fmtDate, fmtDay } from '../ui.js';
+import { h, icon, frag, confirmSheet, promptSheet, toast, empty, fmtDuration, fmtVolume, fmtDate, fmtDay } from '../ui.js';
 import * as S from '../store.js';
 import { go } from '../router.js';
 import { sessionRow } from './home.js';
@@ -25,7 +25,41 @@ export function historyView() {
     st('Burned', fmtVolume(totalCal), 'kcal'),
   ));
 
-  // group by month
+  let editing = false;
+  const listWrap = h('div');
+
+  const paintList = () => {
+    listWrap.replaceChildren();
+    for (const g of groupByMonth()) {
+      listWrap.append(
+        h('div', { class: 'section-title' }, g.label),
+        h('div', { class: 'stack' }, ...g.rows.map(row => sessionRow(row, {
+          onDelete: editing ? (target) => confirmSheet({
+            title: `Delete "${target.name}"?`,
+            message: `${fmtDay(target.startedAt)} · ${target.setCount} set${target.setCount === 1 ? '' : 's'}. This removes it from your history and stats for good.`,
+            confirmText: 'Delete workout', danger: true,
+            onConfirm: async () => { await S.deleteSession(target.id); toast('Deleted'); go('/history'); },
+          }) : null,
+        }))),
+      );
+    }
+  };
+
+  view.append(h('div', { class: 'spread', style: { marginTop: '18px' } },
+    h('span', { class: 'section-title', style: { margin: '0 2px' } }, 'All workouts'),
+    h('button', { class: 'btn btn-sm btn-ghost', onClick: (e) => {
+      editing = !editing;
+      e.currentTarget.textContent = editing ? 'Done' : 'Edit';
+      paintList();
+    } }, 'Edit'),
+  ));
+  paintList();
+  view.append(listWrap);
+  return view;
+}
+
+function groupByMonth() {
+  const sessions = S.state.sessions;
   const groups = new Map();
   sessions.forEach(s => {
     const d = new Date(s.startedAt);
@@ -33,14 +67,7 @@ export function historyView() {
     if (!groups.has(key)) groups.set(key, { label: d.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }), rows: [] });
     groups.get(key).rows.push(s);
   });
-
-  for (const g of groups.values()) {
-    view.append(
-      h('div', { class: 'section-title' }, g.label),
-      h('div', { class: 'stack' }, ...g.rows.map(s => sessionRow(s))),
-    );
-  }
-  return view;
+  return [...groups.values()];
 }
 
 const st = (k, v, u) => h('div', { class: 'stat' },
@@ -107,14 +134,23 @@ export function workoutDetailView(id, params) {
     view.append(card);
   });
 
-  view.append(h('button', {
-    class: 'btn btn-danger btn-block', style: { marginTop: '16px' },
-    onClick: () => confirmSheet({
-      title: 'Delete this workout?', message: 'It will be removed from your history and stats.',
+  view.append(h('div', { class: 'stack', style: { marginTop: '16px' } },
+    h('button', { class: 'btn btn-outline btn-block', onClick: () => promptSheet({
+      title: 'Rename workout', label: 'Name', value: s.name,
+      hint: 'Only changes this logged session, not the template it came from.',
+      onSave: async (name) => {
+        if (!name.trim()) return toast('Give it a name');
+        await S.renameSession(s.id, name);
+        toast('Renamed');
+        go(`/workout/${s.id}`);
+      },
+    }) }, icon('edit'), 'Rename'),
+    h('button', { class: 'btn btn-danger btn-block', onClick: () => confirmSheet({
+      title: 'Delete this workout?', message: 'It will be removed from your history and stats. This cannot be undone.',
       confirmText: 'Delete', danger: true,
       onConfirm: async () => { await S.deleteSession(s.id); toast('Deleted'); go('/history'); },
-    }),
-  }, icon('trash'), 'Delete workout'));
+    }) }, icon('trash'), 'Delete workout'),
+  ));
 
   return view;
 }

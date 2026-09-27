@@ -14,7 +14,7 @@ export const TEMPLATES = [
   /* ============================ DAY 1 ============================ */
   {
     id: 'day1_push',
-    name: 'Day 1 · Push',
+    name: 'Push',
     subtitle: 'Chest, shoulders, triceps + core',
     focus: ['chest', 'shoulders', 'triceps', 'abs'],
     estMin: 55,
@@ -39,7 +39,7 @@ export const TEMPLATES = [
   /* ============================ DAY 2 ============================ */
   {
     id: 'day2_lower',
-    name: 'Day 2 · Legs',
+    name: 'Legs',
     subtitle: 'Quads, hamstrings, glutes + long cardio',
     focus: ['quads', 'hamstrings', 'glutes', 'cardio'],
     estMin: 55,
@@ -64,7 +64,7 @@ export const TEMPLATES = [
   /* ============================ DAY 3 ============================ */
   {
     id: 'day3_pull',
-    name: 'Day 3 · Pull',
+    name: 'Pull',
     subtitle: 'Back, biceps, rear delts + obliques',
     focus: ['back', 'biceps', 'obliques'],
     estMin: 55,
@@ -89,7 +89,7 @@ export const TEMPLATES = [
   /* ============================ DAY 4 ============================ */
   {
     id: 'day4_calisthenics',
-    name: 'Day 4 · Calisthenics Circuit',
+    name: 'Calisthenics Circuit',
     subtitle: 'Full body, minimal rest, core-heavy',
     focus: ['fullbody', 'abs', 'obliques', 'cardio'],
     estMin: 50,
