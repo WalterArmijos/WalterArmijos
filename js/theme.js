@@ -7,8 +7,13 @@ export function applyTheme(mode) {
 }
 
 export function syncThemeColor() {
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (!meta) return;
+  // The meta tag may not exist when the page is embedded in a host shell.
+  let meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    document.head.append(meta);
+  }
   const bg = getComputedStyle(document.body).backgroundColor;
   if (bg) meta.setAttribute('content', bg);
 }
