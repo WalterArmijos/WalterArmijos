@@ -72,28 +72,36 @@ restore from on any device, which is also how you'd move to a new phone.
 
 Four sessions a week, roughly 50–55 minutes each including the treadmill:
 
-| Workout | Focus | Main lifts |
-|---------|-------|-----------|
-| **Push** | Chest, shoulders, triceps, core | Push-ups, DB bench, DB shoulder press |
-| **Legs** | Quads, hamstrings, glutes | Goblet squat, DB Romanian deadlift, lunges |
-| **Pull** | Back, biceps, obliques | Lat pulldown, cable row, single-arm row |
-| **Calisthenics Circuit** | Full body, core-heavy | Push-ups, squats, rows, planks, mountain climbers |
+| Workout | Movements | What's in it |
+|---------|-----------|--------------|
+| **Push** | 5 | Push-ups, DB bench, DB shoulder press, pushdowns, plank |
+| **Legs** | 4 | Goblet squat, DB Romanian deadlift, reverse lunge, leg raise |
+| **Pull** | 4 | Lat pulldown, cable row, hammer curl, side plank |
+| **Calisthenics Circuit** | 4 | Push-ups, squats, inverted rows, planks — four rounds |
+
+Each day is deliberately short: four or five movements, three or four sets each. More
+sets of a lift you're already doing builds more than adding a sixth exercise, and a
+short session you actually finish beats a long one you skip. Starting out, do two sets
+of each and add a set a week.
 
 The numbers on the list are just the suggested running order — rename any workout to
 whatever you actually call it and the order stays.
 
+Nothing is locked down — add sets or extra exercises mid-workout with *Add exercise*,
+or change a template permanently with *Edit exercises*. The full 71-exercise library is
+always available, including everything not in a template by default.
+
 Plus three you can drop in whenever:
 
-- **Cardio + Core** — treadmill intervals, then carries, planks and anti-rotation work.
-  A full session that isn't a lifting day; works as a fifth day or as a swap when a
-  lifting day isn't happening.
+- **Cardio + Core** — treadmill intervals, side planks, hollow holds. ~35 min.
 - **Incline Burn** — treadmill only, 35 minutes steady. The low-effort option.
-- **Mobility & Stretch** — 15 minutes, for rest days.
+- **Mobility & Stretch** — 12 minutes, for rest days.
 
-Each day opens with a treadmill warm-up and closes with a 15–20 minute incline walk,
-then stretching. Calisthenics come first while you're fresh — the dumbbell work exists
-partly to make the bodyweight movements easier over time. Every template has a short
-"why" on its detail screen, and every exercise has form cues behind the *How to* button.
+Each day opens with a treadmill warm-up and closes with a 15–18 minute incline walk.
+Calisthenics come first while you're fresh — the dumbbell work exists partly to make the
+bodyweight movements easier over time. Stretching lives on its own Mobility day rather
+than padding the end of every session. Every template has a short "why" on its detail
+screen, and every exercise has form cues behind the *How to* button.
 
 Templates are fully editable, and you can build your own from scratch. Every workout
 can be renamed (*Rename*), have its exercises reworked (*Edit exercises*), be duplicated,
